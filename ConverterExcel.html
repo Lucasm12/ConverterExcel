@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Excel</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css.css">
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white p-4">
+    <!-- Modal de Tutorial -->
+    <div id="tutorialModal" class="modal active">
+        <div class="glass-effect m-auto p-8 rounded-2xl shadow-2xl w-full max-w-2xl relative">
+            <button onclick="closeTutorial()" class="absolute top-4 right-4 text-white hover:text-blue-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+            <h2 class="text-2xl font-bold mb-4">Como Usar o Gerador de Excel</h2>
+            <div class="space-y-4 text-left">
+                <div class="flex items-start space-x-3">
+                    <div class="bg-blue-500 rounded-full p-2 mt-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <p>Copie os dados do seu arquivo de origem e cole no campo de texto acima.</p>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="bg-blue-500 rounded-full p-2 mt-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <p>Certifique-se de que os dados estejam separados por "|" (pipe) e cada registro em uma linha diferente.</p>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="bg-blue-500 rounded-full p-2 mt-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <p>Clique no botão "Gerar Arquivo Excel" para criar sua planilha automaticamente.</p>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="bg-blue-500 rounded-full p-2 mt-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <p>O arquivo Excel será baixado automaticamente com todos os dados formatados corretamente.</p>
+                </div>
+            </div>
+            <button onclick="closeTutorial()" class="mt-6 w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 shadow-lg">
+                Entendi, vamos começar!
+            </button>
+        </div>
+    </div>
+
+    <div class="glass-effect p-8 rounded-2xl shadow-2xl w-full max-w-2xl">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold mb-2">Gerador de Planilha Excel</h1>
+            <p class="text-blue-100">Insira os dados separados por '|' para gerar sua planilha</p>
+        </div>
+        
+        <div class="space-y-6">
+            <div class="relative">
+                <textarea 
+                    id="inputData" 
+                    placeholder="Insira os dados separados por '|', uma linha por registro" 
+                    class="w-full h-64 p-4 rounded-xl bg-white bg-opacity-90 text-gray-800 outline-none focus:ring-2 focus:ring-blue-400 custom-scrollbar resize-none"
+                ></textarea>
+                <div class="absolute bottom-4 right-4 text-gray-400 text-sm">
+                    Dados separados por |
+                </div>
+            </div>
+
+            <button 
+                onclick="gerarExcel()" 
+                class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 shadow-lg"
+            >
+                <span class="flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Gerar Arquivo Excel
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <footer class="fixed bottom-0 w-full text-center py-3 text-blue-100 text-sm">
+        Versão 1.0
+    </footer>
+
+    <script src="js.js"></script>
+</body>
+</html>
